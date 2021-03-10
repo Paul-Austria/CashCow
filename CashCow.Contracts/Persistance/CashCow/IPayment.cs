@@ -1,4 +1,5 @@
-﻿using CommonBase.Attributes;
+﻿using CashCow.Contracts.Persistance.CashCow;
+using CommonBase.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +20,6 @@ namespace CashCow.Contracts.Persistence.CashCow
         DateTime Date { get; set; }
 
         [ContractPropertyInfo(Required = true, MaxLength = 256)]
-        string Payer { get; set; }
+        IMember Payer { get; set; }
     }
 }

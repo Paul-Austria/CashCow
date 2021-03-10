@@ -1,4 +1,5 @@
-﻿using CashCow.Contracts.Persistence.CashCow;
+﻿using CashCow.Contracts.Persistance.CashCow;
+using CashCow.Contracts.Persistence.CashCow;
 using CommonBase.Extensions;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ namespace CashCow.Logic.Entities.CashCow
         public string Title { get; set; }
         public int Amount { get; set; }
         public DateTime Date { get; set; }
-        public string Payer { get; set; }
+        IMember IPayment.Payer { get; se; }
 
         public void CopyProperties(IPayment other)
         {
@@ -22,7 +23,6 @@ namespace CashCow.Logic.Entities.CashCow
             Title = other.Title;
             Amount = other.Amount;
             Date = other.Date;
-            Payer = other.Payer;
         }
     }
 }

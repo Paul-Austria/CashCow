@@ -1,4 +1,5 @@
-﻿using CashCow.Contracts.Persistence.CashCow;
+﻿using CashCow.Contracts.Persistance.CashCow;
+using CashCow.Contracts.Persistence.CashCow;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace CashCow.Logic.Entities.CashCow
         public string ExtraInfo { get; set; }
         public string Category { get; set; }
         public string Participants { get; set; }
+        List<IMember> ICashEvent.Participants { get; set; }
 
         public void CopyProperties(ICashEvent other)
         {

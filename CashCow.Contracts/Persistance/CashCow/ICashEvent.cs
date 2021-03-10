@@ -1,4 +1,5 @@
 ﻿
+using CashCow.Contracts.Persistance.CashCow;
 using CommonBase.Attributes;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace CashCow.Contracts.Persistence.CashCow
         string Category { get; set; }
 
         [ContractPropertyInfo(Required = true)]
-        string Participants { get; set; }
+        List<IMember> Participants { get; set; }
 
     }
 }
