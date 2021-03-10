@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CashCow.Logic.DataContext
 {
-    internal partial class ProjectDbContext : DbContext, Contracts.IContext
+    internal partial class CashCowDbContext : DbContext, Contracts.IContext
     {
 
     }
