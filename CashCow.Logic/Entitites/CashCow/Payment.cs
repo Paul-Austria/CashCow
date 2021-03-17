@@ -12,7 +12,7 @@ namespace CashCow.Logic.Entities.CashCow
         public string Title { get; set; }
         public int Amount { get; set; }
         public DateTime Date { get; set; }
-        IMember IPayment.Payer { get; se; }
+        IMember IPayment.Payer { get; set; }
 
         public void CopyProperties(IPayment other)
         {
