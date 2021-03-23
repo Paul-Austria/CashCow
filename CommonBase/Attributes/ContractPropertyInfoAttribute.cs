@@ -3,7 +3,7 @@ using System;
 
 namespace CommonBase.Attributes
 {
-    [AttributeUsage(AttributeTargets.Property)]
+	[AttributeUsage(AttributeTargets.Property)]
     public partial class ContractPropertyInfoAttribute : Attribute
     {
         private bool notMapped = false;

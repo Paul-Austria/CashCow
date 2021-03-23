@@ -1,13 +1,9 @@
 ﻿//@BaseCode
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CommonBase.Attributes
 {
-    [AttributeUsage(AttributeTargets.Interface)]
+	[AttributeUsage(AttributeTargets.Interface)]
     public partial class ContractInfoAttribute : Attribute
     {
         public ContextType ContextType { get; set; } = ContextType.Table;

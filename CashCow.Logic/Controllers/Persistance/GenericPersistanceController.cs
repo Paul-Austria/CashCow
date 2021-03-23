@@ -1,86 +1,95 @@
 ﻿//@BaseCode
 
-using CashCow.Logic.Contracts;
 using CommonBase.Extensions;
-using Microsoft.EntityFrameworkCore;
+using CashCow.Logic.Contracts;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
-namespace CashCow.Logic.Controllers.Persistance
+namespace CashCow.Logic.Controllers.Persistence
 {
-    internal abstract partial class GenericPersistanceController<C, E> : GenericController<C, E>
-        where C : CashCow.Contracts.IIdentifiable
-        where E : Entities.IdentityEntity, C, new()
-    {
-        protected GenericPersistanceController(IContext context) : base(context)
-        {
-           
-        }
+	internal abstract partial class GenericPersistenceController<C, E> : GenericController<C, E>
+		where C : CashCow.Contracts.IIdentifiable
+		where E : Entities.IdentityEntity, CashCow.Contracts.ICopyable<C>, C, new()
+	{
+		protected GenericPersistenceController(IContext context) : base(context)
+		{
+		}
 
-        public override Task<int> CountAsync()
-        {
-            return Context.Set<C, E>().CountAsync();
-        }
+		protected GenericPersistenceController(ControllerObject other) : base(other)
+		{
+		}
 
-        public override Task<int> CountByAsync(string pre)
-        {
-            return Context.CountByAsync<C, E>(pre);
-        }
+		public override Task<int> CountAsync()
+		{
+			return Context.CountAsync<C, E>();
+		}
+		public override Task<int> CountByAsync(string predicate)
+		{
+			return Context.CountByAsync<C, E>(predicate);
+		}
 
-        public override async Task<C> GetByIdAsync(int id)
-        {
-            return await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
-        }
+		protected virtual E BeforeReturn(E entity) { return entity; }
+		public override async Task<C> GetByIdAsync(int id)
+		{
+			var result = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
 
-        protected virtual E  BeforeReturn(E entity)
-        {
-            return entity;
-        }
+			return BeforeReturn(result);
+		}
+		public override async Task<IEnumerable<C>> GetAllAsync()
+		{
+			return (await Context.GetAllAsync<C, E>()
+								 .ConfigureAwait(false))
+								 .Select(e => BeforeReturn(e));
+		}
+		public override async Task<IEnumerable<C>> QueryAllAsync(string predicate)
+		{
+			return (await Context.QueryAllAsync<C, E>(predicate)
+								 .ConfigureAwait(false))
+								 .Select(e => BeforeReturn(e));
+		}
+		protected virtual E BeforeInsert(E entity) { return entity; }
+		public override async Task<C> InsertAsync(C entity)
+		{
+			entity.CheckArgument(nameof(entity));
 
-        public override async Task<C> GetByIdAsync(int id)
-        {
-            var result = await Context.GetByIdAsync<C, E>(id).ConfigureAwait(false);
+			var insertEntity = new E();
 
-            return BeforeReturn(result);
-        }
+			insertEntity.CopyProperties(entity);
 
-        public override async Task<IEnumerable<C>> GetAllAsync()
-        {
-           return   await Context.GetAllAsync().ConfigureAwait(false).Select(e => BeforeReturn(e));
+			BeforeInsert(insertEntity);
+			var result = await Context.InsertAsync<C, E>(insertEntity).ConfigureAwait(false);
+			AfterInsert(result);
+			return result;
+		}
+		protected virtual E AfterInsert(E entity) { return entity; }
 
-            
-        }
+		protected virtual E BeforeUpdate(E entity) { return entity; }
+		public override async Task<C> UpdateAsync(C entity)
+		{
+			entity.CheckArgument(nameof(entity));
 
+			var updateEntity = new E();
 
-        override async Task<IEnumerable<C>> QueryAll(string predicate)
-        {
-            var result = await Context.QueryAllAsync<C, E>(predicate)
-                .ConfigureAwait(false).Select(e => BeforeReturn(e));
-        }
+			updateEntity.CopyProperties(entity);
 
-        public override Task<C> CreateAsync()
-        {
-           throw new System.NotImplementedException();
-        }
+			BeforeUpdate(updateEntity);
+			var result = await Context.UpdateAsync<C, E>(updateEntity).ConfigureAwait(false);
+			AfterUpdate(result);
+			return result;
+		}
+		protected virtual E AfterUpdate(E entity) { return entity; }
 
-        protected virtual E BeforeInsert(E entity)
-        {
-            return entity;
-        }
-        public override async Task<C> InsertAsync(C entity)
-        {
-            entity.CheckArgument(nameof(entity));
-            var insertEntity = new E();
-            insertEntity.CopyProperties(entity);
-            BeforeInsert(insertEntity);
-            var result = await Context.InsertAsync().ConfigureAwait(false);
-            AfterInsert(result);
-            return result;
-        }
-        protected virtual E AfterInsert(E entity)
-        {
-            return entity;
-        }
+		public override async Task DeleteAsync(int id)
+		{
+			var entity = await GetByIdAsync(id).ConfigureAwait(false);
 
-    }
+			if (entity == null)
+				throw new Exception($"Invalid id: '{id}'");
+
+			await Context.DeleteAsync<C, E>(id).ConfigureAwait(false);
+		}
+
+	}
 }

@@ -1,79 +1,149 @@
 ﻿//@BaseCode
-
+using Microsoft.EntityFrameworkCore;
 using CashCow.Contracts;
 using CashCow.Logic.Entities;
 using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using CashCow.Logic.Contracts;
 
 namespace CashCow.Logic.DataContext
 {
-    internal partial class CashCowDbContext : DbContext, Contracts.IContext
-    {
-        public Task<int> SaveChangeAsync()
-        {
-            return SaveChangesAsync();
-        }
+	internal partial class CashCowDbContext : DbContext, CashCow.Logic.Contracts.IContext
+	{
+		static CashCowDbContext()
+		{
+			ClassConstructing();
+			ConnectionString = "Data Source=(localdb)\\MSSQLLocalDB;Database=SmartNQuickDb;Integrated Security=True";
+			ClassConstructed();
+		}
+		static partial void ClassConstructing();
+		static partial void ClassConstructed();
+		public CashCowDbContext()
+		{
+			Constructing();
+			Constructed();
+		}
+		partial void Constructing();
+		partial void Constructed();
+
+		public static string ConnectionString { get; protected set; }
+
+		public DbSet<E> Set<C, E>()
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			DbSet<E> result = null;
+
+			GetDbSet<C, E>(ref result);
+
+			return result;
+		}
+		partial void GetDbSet<C, E>(ref DbSet<E> dbset) where E : class;
 
 
-        public Task<int> CountAsync<C, E>()
-           where C: IIdentifiable
-            where E: IdentityEntity, C
-        {
-            throw new NotImplementedException();
-        }
+		public Task<int> CountAsync<C, E>()
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return Set<E>().CountAsync();
+		}
+		public Task<int> CountByAsync<C, E>(string predicate)
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return Set<E>().Where(predicate).CountAsync();
+		}
 
+		public Task<E> GetByIdAsync<C, E>(int id)
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return Set<C, E>().FindAsync(id).AsTask();
+		}
+		public async Task<IEnumerable<E>> GetAllAsync<C, E>()
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return await Set<C, E>().ToArrayAsync().ConfigureAwait(false);
+		}
 
-        public Task<int> CountByAsync<C,E> (string predicate) 
-            where C : IIdentifiable
-            where E : IdentityEntity, C
-        {
-            return Set<E>().Where(predicate).CountAsync();
-        }
-        public DbSet<E> Set<C, E>()
-            where C : IIdentifiable
-            where E : IdentityEntity, C
-        {
-            throw new NotImplementedException();
-        }
+		public async Task<IEnumerable<E>> QueryAllAsync<C, E>(string predicate)
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return await Set<C, E>().Where(predicate).ToArrayAsync();
+		}
 
-        public Task<E> GetByIdAsync<C, E>(int id)
-            where C : IIdentifiable
-            where E : IdentityEntity, C, new()
-        {
-            return  Set<C, E>().FindAsync(id);
-        }
+		public async Task<E> InsertAsync<C, E>(E entity)
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			await Set<C, E>().AddAsync(entity).ConfigureAwait(false);
 
-        Task<C> IContext.GetByIdAsync<C, E>(int id)
-        {
-            throw new NotImplementedException();
-        }
+			return entity;
+		}
 
-        public Task<IEnumerable<C>> GetAllAsync<C,E>() where C : IIdentifiable
-        {
-            return Set<C,E>().;
-        }
+		public Task DeleteAsync<C, E>(int id)
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return Task.Run(() =>
+			{
+				E result = Set<E>().SingleOrDefault(i => i.Id == id);
 
-        async Task<IEnumerable<E>> IContext.GetAllAsync<C, E>()
-        {
-            return await Set<C, E>().ToArrayAsync();
-        }
+				if (result != null)
+				{
+					Set<C, E>().Remove(result);
+				}
+			});
+		}
 
-        public Task<IEnumerable<C>> QueryAll<C, E>()
-            where C : IIdentifiable
-            where E : IdentityEntity, C, new()
-        {
-            return await Set<C, E>().Where(predicate).toArrayAsync();
-        }
+		public Task<E> UpdateAsync<C, E>(E entity)
+			where C : IIdentifiable
+			where E : IdentityEntity, C
+		{
+			return Task.Run(() =>
+			{
+				Set<C, E>().Update(entity);
+				return entity;
+			});
+		}
 
-        public Task InsertAsync()
-        {
-            throw new NotImplementedException();
-        }
-    }
+		public Task<int> SaveChangesAsync()
+		{
+			return base.SaveChangesAsync();
+		}
+
+		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+		{
+			bool handled = false;
+
+			BeforeOnConfiguring(optionsBuilder, ref handled);
+			if (handled == false)
+			{
+				optionsBuilder.UseSqlServer(ConnectionString);
+			}
+			AfterOnConfiguring(optionsBuilder);
+
+			base.OnConfiguring(optionsBuilder);
+		}
+		partial void BeforeOnConfiguring(DbContextOptionsBuilder optionsBuilder, ref bool handled);
+		partial void AfterOnConfiguring(DbContextOptionsBuilder optionsBuilder);
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			bool handled = false;
+
+			BeforeOnModelCreating(modelBuilder, ref handled);
+			if (handled == false)
+			{
+
+			}
+			AfterOnModelCreating(modelBuilder);
+			base.OnModelCreating(modelBuilder);
+		}
+		partial void BeforeOnModelCreating(ModelBuilder modelBuilder, ref bool handled);
+		partial void AfterOnModelCreating(ModelBuilder modelBuilder);
+	}
 }

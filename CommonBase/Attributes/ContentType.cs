@@ -2,7 +2,7 @@
 
 namespace CommonBase.Attributes
 {
-    public enum ContentType : byte
+	public enum ContentType : byte
     {
         Undefined = byte.MaxValue,
         //
