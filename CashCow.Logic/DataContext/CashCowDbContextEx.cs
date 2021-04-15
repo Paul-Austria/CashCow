@@ -7,13 +7,16 @@ using System.Text;
 using System.Threading.Tasks;
 using CashCow.Contracts.Persistance.CashCow;
 using CashCow.Contracts.Persistence.CashCow;
+using CashCow.Logic.Entitites.CashCow;
 
 namespace CashCow.Logic.DataContext
 {
     partial class CashCowDbContext
     {
         public DbSet<CashEvent> Event { get; set; }
-
+		public DbSet<Member> Member { get; set; }
+		public DbSet<Payment> Payment { get; set; }
+ 
 		partial void GetDbSet<C, E>(ref DbSet<E> dbset) where E : class
 		{
 			if (typeof(C) == typeof(ICashEvent))

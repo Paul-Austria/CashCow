@@ -1,4 +1,5 @@
 ﻿using CashCow.Contracts.Persistence.CashCow;
+using CommonBase.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;

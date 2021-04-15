@@ -3,13 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31025.194
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonBase", "CommonBase\CommonBase.csproj", "{04A42238-F36B-455D-BC12-555F618B838F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommonBase", "CommonBase\CommonBase.csproj", "{04A42238-F36B-455D-BC12-555F618B838F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashCow.ConApp", "CashCow.ConApp\CashCow.ConApp.csproj", "{0C6F5685-C559-4B76-B473-7BD8E43159B4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashCow.ConApp", "CashCow.ConApp\CashCow.ConApp.csproj", "{0C6F5685-C559-4B76-B473-7BD8E43159B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashCow.Contracts", "CashCow.Contracts\CashCow.Contracts.csproj", "{6E7B26F8-F1C6-417B-A34D-BBC870EC0936}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashCow.Contracts", "CashCow.Contracts\CashCow.Contracts.csproj", "{6E7B26F8-F1C6-417B-A34D-BBC870EC0936}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashCow.Logic", "CashCow.Logic\CashCow.Logic.csproj", "{B94C4236-6928-42B5-AA28-98F135841458}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CashCow.Logic", "CashCow.Logic\CashCow.Logic.csproj", "{B94C4236-6928-42B5-AA28-98F135841458}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashCow.WebApi", "CashCow.WebApi\CashCow.WebApi.csproj", "{A9420E01-48C0-463F-B377-824CFDE1F535}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CashCow.Transfer", "CashCow.Transfer\CashCow.Transfer.csproj", "{A8446B6E-A87A-402B-86B8-B8785061FA8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +37,14 @@ Global
 		{B94C4236-6928-42B5-AA28-98F135841458}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B94C4236-6928-42B5-AA28-98F135841458}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B94C4236-6928-42B5-AA28-98F135841458}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9420E01-48C0-463F-B377-824CFDE1F535}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9420E01-48C0-463F-B377-824CFDE1F535}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9420E01-48C0-463F-B377-824CFDE1F535}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9420E01-48C0-463F-B377-824CFDE1F535}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8446B6E-A87A-402B-86B8-B8785061FA8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8446B6E-A87A-402B-86B8-B8785061FA8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8446B6E-A87A-402B-86B8-B8785061FA8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8446B6E-A87A-402B-86B8-B8785061FA8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
